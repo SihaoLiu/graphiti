@@ -9,12 +9,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv using the installer script
+# Install uv system-wide
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
-RUN sh /uv-installer.sh && rm /uv-installer.sh
+RUN sh /uv-installer.sh && rm /uv-installer.sh && \
+    mv /root/.local/bin/uv /usr/local/bin/uv && \
+    mv /root/.local/bin/uvx /usr/local/bin/uvx
 
-# Add uv to PATH
-ENV PATH="/root/.local/bin:${PATH}"
+# Add uv to PATH (now system-wide)
+ENV PATH="/usr/local/bin:${PATH}"
 
 # Configure uv for optimal Docker usage
 ENV UV_COMPILE_BYTECODE=1 \
